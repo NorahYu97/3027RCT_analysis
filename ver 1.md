@@ -282,7 +282,7 @@ p_co2_AE<-p_co2_AE+theme(strip.text=element_text(size=8),
 p_co2_AE
 ```
 
-
+# Fig.2 Immunogenicity of RQ3027, RQ3025 and RQ3013
 ## Overall immunogenicity analysis
 ``` {r Overall immunogenicity analysis}
 library(patchwork)
@@ -482,7 +482,7 @@ p_co_B1B4
 
 ```
 
-# Fig.2 Immunogenicity of RQ3027, RQ3025 and RQ3013
+
 ## Data management of immunogenicity of Cohort1
 ``` {r Immunogenicity analysis Coh1}
 library(tidyverse)
@@ -784,7 +784,7 @@ p_coh2_B1B4
 
 
 
-## Cumulative event rate
+## Cumulative event rate of COVID-19
 ```{r COVID-19 cases}
 library(ggplot2)
 library(survival)
