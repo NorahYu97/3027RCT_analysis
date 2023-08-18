@@ -1,0 +1,54 @@
+library(pheatmap)
+gc<-data1[rownames(diff),]
+group4<-factor(diff$change,levels=c("Up","Down"))
+site<-which(group4=="Up")
+group4<-c(group4[-site],group4[site])
+gc<-rbind(gc[-site,],gc[site,])
+annotation_col=data.frame(group=group)
+rownames(annotation_col)=colnames(gc) 
+annotation_row=data.frame(Change=group4)
+rownames(annotation_row)=rownames(gc) 
+colors=list(group=c(Normal="#919191",Cancer="#FF9200"),
+            Change=c(Up="#E43535",Down="#00438E"))
+pheatmap(log2(gc+1),scale = "row",#由于是count值 故取对数化进行绘图
+         show_colnames = F,
+         show_rownames = F,
+         cluster_rows = T,
+         cluster_cols = F,
+         fontsize=13,fontsize_row=13,border=F,annotation_colors=colors,
+         annotation_row = annotation_row,annotation_names_row=F,annotation_names_col=F,
+         annotation_col = annotation_col,breaks = seq(-1,1,length.out=100)
+         ,filename = '../output/DESeq/GSE137354/GSE137354_heatmap.pdf',height = 8,width =14)
+
+####热图
+# heatmap
+library(ComplexHeatmap)
+library(circlize)
+# 导入R包
+library(pheatmap)
+library(ggplot2)
+library(RColorBrewer)
+
+
+## 提取差异基因的表达量
+diff2<-diff[order(diff$log2FoldChange,decreasing = T),]
+diff2_top200<-diff2[c(1:100,(dim(diff2)[1]-99):dim(diff2)[1]),]
+df = log2(na.omit(LUAD[rownames(diff2_top200),])+1)
+DEG_id1 <- rownames(diff2_top200)
+DEG_exp <- df[DEG_id1,]
+hmexp <- na.omit(DEG_exp)
+
+eset_dat <- hmexp
+index <- DEG_id1
+index_matrix <- t(scale(t(eset_dat[index,])))##归一化
+index_matrix[index_matrix >= 1] = 1
+index_matrix[index_matrix <= -1] = -1
+hmexp <- index_matrix
+col_fun <- colorRamp2(c(-1, 0,1),c("#4F94CD", "white", "#8B1A1A"))
+pdf("../output/01_DEGs/01_heatmap_gene.pdf", width=10, height=8)
+ha1 = HeatmapAnnotation(group = as.factor(c(rep("Normal", 58),rep("Cancer", 524))),col =list(group = c("Cancer" = "#E9967A", "Normal" = "#4682B4")))
+densityHeatmap(hmexp, ylim = c(-2, 2),col=colorRampPalette(c("#4F94CD", "white", "#8B1A1A"))(50),quantile_gp = gpar(fontsize = 9),title = " ",
+               ylab = "Expression",top_annotation = ha1,height = unit(5, "cm")) %v% 
+  HeatmapAnnotation(Expression = anno_barplot(1:length(colnames(hmexp))))  %v% 
+  Heatmap(hmexp, name = "expression",col =col_fun,show_row_names = FALSE,show_column_names = FALSE, cluster_rows = TRUE,height = unit(11, "cm"))
+dev.off()
