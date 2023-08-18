@@ -1,3 +1,10 @@
+---
+title: "pheatmap_0817"
+author: "Norah Yu"
+date: '2023-08-17'
+output: html_document
+---
+
 ```{r overall}
 
 library(pheatmap)
@@ -87,7 +94,7 @@ colors=list(Day = c(Day0="#919191",Day14="#FF9200"),
             Group = c(RQ3013 = "#09357A",
                       RQ3025 = "#02915A",
                       RQ3027 = "#740D91"))
-p1 <- pheatmap(log2(B1B4_ndrop+1),
+pheat_ov <- pheatmap(log2(B1B4_ndrop+1),
                scale = "row",
          show_colnames = F,
          show_rownames = F,
@@ -98,12 +105,11 @@ p1 <- pheatmap(log2(B1B4_ndrop+1),
          border=F,
          annotation_colors=colors,
          annotation_row = annotation_row,
-         annotation_names_row=T,
+         annotation_names_row=F,
          annotation_names_col=F,
          annotation_col = annotation_col,
          breaks = seq(-1,1,length.out=100),
          gaps_col = 9,
-         cutree_rows = 3,
          color = colorRampPalette(c("#58A4FD","white","#5E1D9D"))(100))
          # ,filename = '../output/DESeq/GSE137354/GSE137354_heatmap.pdf',height = 8,width =14)
 
@@ -177,7 +183,7 @@ B1B4_p27 <- B1B4_p27[,-1]
 
 ## Subset RQ3025
 B1B4_25 <- subset(B1B4_ndrop, Group.x == "RQ3025")
-B1B4_p25 <- B1B4_27[,-c(2,3,13,14)]
+B1B4_p25 <- B1B4_25[,-c(2,3,13,14)]
 rownames(B1B4_p25) <- B1B4_p25$ID
 B1B4_p25 <- B1B4_p25[,-1]
 
@@ -232,7 +238,6 @@ pheat_27 <- pheatmap(log2(B1B4_p27+1),
          breaks = seq(-1,1,length.out=100),
          gaps_col = 9,
          color = colorRampPalette(c("#58A4FD","white","#5E1D9D"))(100))
-         # ,filename = '../output/DESeq/GSE137354/GSE137354_heatmap.pdf',height = 8,width =14)
 
 pheat_25 <- pheatmap(log2(B1B4_p25+1),
                scale = "row",
@@ -270,3 +275,4 @@ pheat_13 <- pheatmap(log2(B1B4_p13+1),
          color = colorRampPalette(c("#58A4FD","white","#5E1D9D"))(100))
          # ,filename = '../output/DESeq/GSE137354/GSE137354_heatmap.pdf',height = 8,width =14)
 ```
+
